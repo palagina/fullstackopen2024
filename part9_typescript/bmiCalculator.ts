@@ -1,11 +1,20 @@
-import { isNotNumber } from "./utils";
+interface IBmiResult { 
+    weight: number,
+    height: number,
+    bmi: string
+  }
 
-const calculateBmi = (height: number, weight: number) : string => {
-    if (height <= 0 || weight <= 0) {
-        throw new Error('Height and weight must be above zero.');
-    }
+  export const calculateBmi = (height: number, weight: number): IBmiResult => {
+        const bmi = weight / Math.pow(height / 100, 2);
+        const bmiText = getBmiText(bmi);
+        return {
+            weight,
+            height,
+            bmi: bmiText
+        };
+};
 
-    const bmi = weight / Math.pow((height / 100), 2)
+const getBmiText = (bmi: number) : string => {
     switch(true) {
         case bmi<18.5:
             return 'Underweight';
@@ -17,22 +26,5 @@ const calculateBmi = (height: number, weight: number) : string => {
             return 'Obesity';
         default:
             throw new Error('Error');
-    }
-}
-
-try {
-    
-    const height: number = Number(process.argv[2]);
-    const weight: number = Number(process.argv[3]);
-
-    if (isNaN(height) || isNaN(weight)) {
-        throw new Error('Height and weight should be numbers');
-    }
-    console.log(calculateBmi(height, weight));
-} catch (error) {
-    if (error instanceof Error) {
-        console.error('An error occurred:', error.message);
-    } else {
-        console.error('An unknown error occurred.');
     }
 }
