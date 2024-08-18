@@ -9,7 +9,7 @@ interface IExerciseObject {
   }
 
 
-const calculateExercises = (targetHoursPerDay: number, dailyExerciseHours: Array<number> ) : IExerciseObject => {
+export const calculateExercises = (targetHoursPerDay: number, dailyExerciseHours: Array<number> ) : IExerciseObject => {
     const periodLength = dailyExerciseHours.length;
     const trainingDays = dailyExerciseHours.reduce((count, num) => count + (num !== 0 ? 1 : 0), 0);
     const totalHoursPerPeriod = dailyExerciseHours.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
@@ -25,12 +25,12 @@ const calculateExercises = (targetHoursPerDay: number, dailyExerciseHours: Array
         ratingDescription,
         target: targetHoursPerDay,
         average: averageHoursPerDay
-    }
-    return exerciseObject
-}
+    };
+    return exerciseObject;
+};
 
 const getRating = (averageHoursPerDay: number, targetHoursPerDay: number) : number => {
-    const targetMatchIndex = averageHoursPerDay/targetHoursPerDay
+    const targetMatchIndex = averageHoursPerDay/targetHoursPerDay;
     switch(true) {
         case targetMatchIndex===0:
             return 0;
@@ -43,7 +43,7 @@ const getRating = (averageHoursPerDay: number, targetHoursPerDay: number) : numb
         default:
             throw new Error('Error');
     }
-}
+};
 
 const getRatingDescription = (rating: number) : string  => {
     const descriptionArray = [
@@ -51,27 +51,27 @@ const getRatingDescription = (rating: number) : string  => {
         'Not bad for a start', 
         'Still a bit to work on', 
         'Excellent! Just remember to recover',
-    ]
-    return descriptionArray[rating]
-}
+    ];
+    return descriptionArray[rating];
+};
 
-try {
-    const targetHoursPerDay: number = Number(process.argv[2]);
-    const dailyExerciseHours: Array<number> = process.argv.slice(3).map((arg) => {
-        if (isNaN(Number(arg)) ) {
-            throw new Error('Input hours should be numbers');
-        }
-        return Number(arg)
-    });
+// try {
+//     const targetHoursPerDay: number = Number(process.argv[2]);
+//     const dailyExerciseHours: Array<number> = process.argv.slice(3).map((arg) => {
+//         if (isNaN(Number(arg)) ) {
+//             throw new Error('Input hours should be numbers');
+//         }
+//         return Number(arg);
+//     });
 
-    if (isNaN(targetHoursPerDay)) {
-        throw new Error('Target hours should be a number');
-    }
-    console.log(calculateExercises(targetHoursPerDay, dailyExerciseHours));
-} catch (error) {
-    if (error instanceof Error) {
-        console.error('An error occurred:', error.message);
-    } else {
-        console.error('An unknown error occurred.');
-    }
-}
+//     if (isNaN(targetHoursPerDay)) {
+//         throw new Error('Target hours should be a number');
+//     }
+//     console.log(calculateExercises(targetHoursPerDay, dailyExerciseHours));
+// } catch (error) {
+//     if (error instanceof Error) {
+//         console.error('An error occurred:', error.message);
+//     } else {
+//         console.error('An unknown error occurred.');
+//     }
+// }

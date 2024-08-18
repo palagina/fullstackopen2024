@@ -4,14 +4,14 @@ interface IBmiResult {
     bmi: string
   }
 
-  export const calculateBmi = (height: number, weight: number): IBmiResult => {
-        const bmi = weight / Math.pow(height / 100, 2);
-        const bmiText = getBmiText(bmi);
-        return {
-            weight,
-            height,
-            bmi: bmiText
-        };
+export const calculateBmi = (height: number, weight: number): IBmiResult => {
+    const bmi = weight / Math.pow(height / 100, 2);
+    const bmiText = getBmiText(bmi);
+    return {
+        weight,
+        height,
+        bmi: bmiText
+    };
 };
 
 const getBmiText = (bmi: number) : string => {
@@ -27,4 +27,4 @@ const getBmiText = (bmi: number) : string => {
         default:
             throw new Error('Error');
     }
-}
+};
