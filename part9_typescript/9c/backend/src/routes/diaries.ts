@@ -8,7 +8,7 @@ const router = express.Router();
 router.use(errorMiddleware);
 
 router.get('/', (_req, res) => {
-    res.send(diaryService.getNonSensitiveEntries());
+    res.send(diaryService.getEntries());
 });
 
 router.get('/:id', (req, res) => {
