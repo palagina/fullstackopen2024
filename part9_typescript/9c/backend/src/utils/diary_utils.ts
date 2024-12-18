@@ -9,5 +9,5 @@ export const NewEntrySchema = z.object({
 });
 
 export const toNewDiaryEntry = (object: unknown): NewDiaryEntry => {
-  return NewEntrySchema.parse(object);
+    return NewEntrySchema.parse(object);
 };
