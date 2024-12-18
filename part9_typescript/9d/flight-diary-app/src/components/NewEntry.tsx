@@ -1,23 +1,23 @@
 import { useState } from "react";
-import { NewEntryType } from "../types/EntryTypes";
+import { EntryType } from "../types/EntryTypes";
 
 interface NewEntryProps {
-  addNewEntry: (newEntry: NewEntryType) => void;
+  addNewEntry: (newEntry: EntryType) => void;
   errorMessage: string;
 }
 
 const NewEntry = (props: NewEntryProps) => {
-  const [newEntry, setNewEntry] = useState<NewEntryType>({
-    date: '2024-12-20',
-    visibility: 'ok',
-    weather: 'sunny',
+  const [newEntry, setNewEntry] = useState<EntryType>({
+    date: '',
+    visibility: '',
+    weather: '',
     comment: ''
   });
 
   const weatherOptions = ['sunny', 'rainy', 'cloudy', 'stormy', 'windy'];
-  //const visibilityOptions = ['great', 'good', 'ok', 'poor'];
+  const visibilityOptions = ['great', 'good', 'ok', 'poor'];
 
-  const handleChange = (field: keyof NewEntryType, value: string) => {
+  const handleChange = (field: keyof EntryType, value: string) => {
       setNewEntry({ ...newEntry, [field]: value });
     };
 
@@ -44,29 +44,37 @@ const NewEntry = (props: NewEntryProps) => {
               onChange={(e) => handleChange('date', e.target.value)}
           />
 
-          <input
-              placeholder="Visibility"
-              value={newEntry.visibility}
-              onChange={(e) => handleChange('visibility', e.target.value)}
-          />
+          <div>
+            <div>Visibility:</div>
+            {visibilityOptions.map((option) => (
+              <label key={option}>
+                <input
+                  type="radio"
+                  name="visibility"
+                  value={option}
+                  checked={newEntry.visibility === option}
+                  onChange={(e) => handleChange('visibility', e.target.value)}
+                />
+                {option}
+              </label>
+            ))}
+          </div>
 
-          {/* <select id="visibility" value={newEntry.visibility} onChange={(e) => handleChange('visibility', e.target.value)}>
-              <option value="">-- Select visibility --</option>
-              {visibilityOptions.map((option) => (
-              <option key={option} value={option}>
-                  {option}
-              </option>
-              ))}
-          </select> */}
-
-          <select id="weather" value={newEntry.weather} onChange={(e) => handleChange('weather', e.target.value)}>
-              <option value="">-- Select visibility --</option>
-              {weatherOptions.map((option) => (
-              <option key={option} value={option}>
-                  {option}
-              </option>
-              ))}
-          </select>
+          <div>
+            <div>Weather:</div>
+            {weatherOptions.map((option) => (
+              <label key={option}>
+                <input
+                  type="radio"
+                  name="weather"
+                  value={option}
+                  checked={newEntry.weather === option}
+                  onChange={(e) => handleChange('weather', e.target.value)}
+                />
+                {option}
+              </label>
+            ))}
+          </div>
 
           <textarea
               placeholder="Comment"

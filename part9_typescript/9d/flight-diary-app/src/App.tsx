@@ -1,7 +1,7 @@
 import NewEntry from './components/NewEntry'
 import EntryList from './components/EntryList'
 import { useState, useEffect } from "react";
-import { EntryType, NewEntryType } from "./types/EntryTypes";
+import { EntryType } from "./types/EntryTypes";
 import { getAllEntries, createEntry } from './services/entryService';
 import { AxiosError } from 'axios';
 
@@ -17,7 +17,7 @@ const App = () => {
     })
   }, [])
 
-  const addNewEntry = async (entry: NewEntryType) => {
+  const addNewEntry = async (entry: EntryType) => {
     try {
       const data: EntryType = await createEntry(entry);
       const newEntryList: EntryType[] = [data, ...entryList];
