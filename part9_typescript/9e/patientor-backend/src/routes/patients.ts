@@ -2,7 +2,7 @@ import express, { Request, Response, NextFunction }  from 'express';
 import patientService from '../services/patientService';
 import { NewPatientSchema } from '../utils/patientor_utils';
 import errorMiddleware from '../utils/common_utils';
-import { NewPatient, Patient } from '../types/patientorTypes';
+import { NewPatient, Patient } from '../types';
 
 const router = express.Router();
 router.use(errorMiddleware);
