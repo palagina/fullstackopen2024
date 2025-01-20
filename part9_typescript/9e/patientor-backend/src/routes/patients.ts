@@ -8,11 +8,15 @@ const router = express.Router();
 router.use(errorMiddleware);
 
 router.get('/:id', (req, res) => {
-  const patient = patientService.getPatientById(String(req.params.id));
-  if (patient) {
-    res.send(patient);
-  } else {
-    res.sendStatus(404);
+  try {
+    const patient = patientService.getPatientById(String(req.params.id));
+    if (patient) {
+      res.send(patient); 
+    } else {
+      res.sendStatus(404);
+    }
+  } catch (error) {
+    res.status(500).send(error);
   }
 });
 

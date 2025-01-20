@@ -3,7 +3,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import express, { ErrorRequestHandler } from 'express';
 import cors from 'cors';
-import diagnoseRouter from './routes/diagnoses';
+import diagnosisRouter from './routes/diagnoses';
 import patientRouter from './routes/patients';
 //import { ErrorRequestHandler } from 'express';
 
@@ -13,7 +13,7 @@ app.use(cors());
 
 const PORT = 3001;
 
-app.use('/api/diagnoses', diagnoseRouter);
+app.use('/api/diagnoses', diagnosisRouter);
 app.use('/api/patients', patientRouter);
 
 const errorHandler: ErrorRequestHandler = (err, _req, res, _next) => {

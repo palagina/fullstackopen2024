@@ -1,11 +1,7 @@
 import { z } from 'zod';
-import { NewPatientSchema } from './utils/patientor_utils';
+import { NewPatientSchema, DiagnosisSchema} from './utils/patientor_utils';
 
-export interface Diagnose {
-    code: string;
-    name: string;
-    latin?: string;
-}
+export type Diagnosis = z.infer<typeof DiagnosisSchema>;
 
 export interface Patient {
   id: string;
@@ -27,14 +23,12 @@ export enum Gender {
 
 export type NewPatient = z.infer<typeof NewPatientSchema>;
 
-type Diagnosis = string;
-
 interface BaseEntry {
   id: string;
   description: string;
   date: string;
   specialist: string;
-  diagnosisCodes?: Array<Diagnosis>;
+  diagnosisCodes?: Array<string>;
 }
 
 export enum HealthCheckRating {
