@@ -1,5 +1,5 @@
 import patients from '../../data/patients';
-import { Patient, NonSensitivePatient, NewPatient } from '../types';
+import { Patient, NonSensitivePatient, NewPatient, EntryWithoutId, Entry } from '../types';
 import { v1 as uuid } from 'uuid';
 
 const getPatients = (): Patient[] => {
@@ -29,9 +29,22 @@ const addPatient = (patient: NewPatient): Patient  => {
   return newPatient;
 };
 
+const addEntry = (patientId: string, entry: EntryWithoutId): Entry  => {
+  const id = uuid();
+  const newEntry = {
+    id,
+    ...entry,
+  };
+
+  const patientIndex = patients.findIndex((patient) => patient.id === patientId);
+  patients[patientIndex].entries.push(newEntry);
+  return newEntry;
+};
+
 export default {
   getPatients,
   getPatientById,
   getNonSensitivePatientData,
-  addPatient
+  addPatient,
+  addEntry
 };
