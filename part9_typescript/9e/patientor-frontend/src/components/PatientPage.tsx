@@ -1,14 +1,18 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { Patient, Entry, HealthCheckRating } from "../types";
+import { Patient, EntryFormValues } from "../types";
 import patientService from "../services/patients";
 import diagnosisService from "../services/diagnoses";
-import { Card, Grid, Icon } from '@mui/material';
+import { Box, Alert } from '@mui/material';
+import AddEntryForm from "./AddEntryForm";
+import PatientInfo from "./PatientInfo";
+import axios from 'axios';
 
 const PatientPage = () => {
   const { id } = useParams<{ id: string }>();
   const [patient, setPatient] = useState<Patient>();
   const [diagnoses, setDiagnoses] = useState<Record<string, string>>({});
+  const [error, setError] = useState<string>();
 
   const getDiagnosisNameByCode = async (code: string): Promise<string> => {
     const diagnosis = await diagnosisService.getDiagnosisByCode(code);
@@ -60,62 +64,38 @@ const PatientPage = () => {
     return <div>Loading...</div>;
   }
 
-  const getEntryTypeIcon = (type: string): string => {
-    switch (type) {
-      case 'HealthCheck':
-        return 'medical_information';
-      case 'Hospital':
-        return 'home_health';
-      case 'OccupationalHealthcare':
-        return 'medical_services';
-      default:
-        return 'home';
-    }
-  };
-
-  const getHealthCheckRatingColor = (rating: HealthCheckRating): string => {
-    switch (rating) {
-      case HealthCheckRating.Healthy:
-        return 'green';
-      case HealthCheckRating.LowRisk:
-        return 'yellow';
-      case HealthCheckRating.HighRisk:
-        return 'orange';
-      case HealthCheckRating.CriticalRisk:
-        return 'red';
-      default:
-        return '';
+  const submitNewEntry = async (values: EntryFormValues) => {
+    try {
+      const newEntry = await patientService.addEntry(values, patient.id);
+      const newEntryList = [...patient.entries, newEntry];
+      setPatient({...patient, entries: newEntryList});
+    } catch (e: unknown) {
+      if (axios.isAxiosError(e)) {
+        if (e?.response?.data && typeof e?.response?.data === "string") {
+          const message = e.response.data.replace('Something went wrong. Error: ', '');
+          console.error(message);
+          setError(message);
+        } else {
+          setError("Unrecognized axios error");
+        }
+      } else {
+        console.error("Unknown error", e);
+        setError("Unknown error");
+      }
     }
   };
 
   return (
-    <div>
-      <h1>{patient.name}</h1>
-      <p>Gender: {patient.gender}</p>
-      <p>SSN: {patient.ssn}</p>
-      <p>Occupation: {patient.occupation}</p>
-      <h3>Entries</h3>
-      <Grid container spacing={2}>
-        {patient.entries.map((entry: Entry, index) => (
-          <Grid key={index} item md={12}>
-            <Card variant="outlined" sx={{ padding: 2 }}>
-              <p>{entry.date} <Icon>{getEntryTypeIcon(entry.type)}</Icon></p>
-              <p><i>{entry.description}</i></p>
-              <ul>
-                {entry.diagnosisCodes?.map((code: string) => (
-                  <li key={code}>
-                    {code}: {diagnoses[code] || 'Loading...'}
-                  </li>
-                ))}
-              </ul>
-              {entry.type === "HealthCheck" && (
-                <Icon sx={{ color: getHealthCheckRatingColor(entry.healthCheckRating) }} >favorite</Icon>
-              )}
-              {entry.specialist ? <p>Diagnose by {entry.specialist}</p> : null}
-            </Card>
-          </Grid>
-      ))}</Grid>
-    </div>
+      <Box display="flex" flexDirection="row" gap={3}>
+        <Box flex={8}>
+          <PatientInfo patient={patient} diagnoses={diagnoses}/>
+        </Box>
+        <Box flex={4}>
+          <AddEntryForm onSubmit={submitNewEntry} />
+          {error && <Alert severity="error">{error}</Alert>}
+        </Box>
+      </Box>
+
   );
 };
 
